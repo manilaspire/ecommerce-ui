@@ -1,14 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { addCart } from "../redux/action";
 import { useNavigate } from 'react-router-dom';
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 
-import { Link } from "react-router-dom";
-
 const Products = (props) => {
-  const [loading, setLoading] = useState(false);
+  const [loading] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const addProduct = (product) => {
@@ -44,7 +42,7 @@ const Products = (props) => {
   };
 
   const viewProduct = (productId) => {
-    navigate('/product/'+ productId);
+    navigate('/product/'+ productId, { state: { productId }});
   };
   
   return (
@@ -52,15 +50,20 @@ const Products = (props) => {
       <div className="products-container my-3 py-3">
         <div className="row justify-content-center" style={{margin: "10px"}}>
           {loading ? <Loading /> : (
-            (<>     
-              {props.data.map((product) => {
+            <>   
+            { props.data.length === 0 ? 
+            <div style={{fontSize:'30px', textAlign: 'center', height: '400px'}}>
+              <p>no data to display</p>
+              </div> : 
+            <>
+            {props.data && props.data.map((product) => {
                 return (
                   <div id={product.id} key={product.id} className="col-md-2 col-sm-6 col-xs-8 col-12 mb-4">
                     <div className="card text-center h-100" key={product.id}>
                       <div onClick={() => viewProduct(product.id)}>
                       <img
                         className="card-img-top p-3"
-                        src={product.image}
+                        src={product.imageurl}
                         alt="Card"
                         height={90}
                       />
@@ -77,9 +80,9 @@ const Products = (props) => {
                       </ul>
                       </div>
                       <div className="card-body">
-                        <Link to={"/product/" + product.id} className="btn btn-dark m-1">
+                      <button className="btn btn-dark m-1" onClick={() => viewProduct(product.id)}>
                           Buy Now
-                        </Link>
+                        </button>
                         <button className="btn btn-dark m-1" onClick={() => addProduct(product)}>
                           Add to Cart
                         </button>
@@ -88,7 +91,9 @@ const Products = (props) => {
                   </div>
                 );
               })}
-            </>)
+            </>
+            }  
+            </>
           )}
         </div>
       </div>

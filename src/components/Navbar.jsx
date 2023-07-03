@@ -4,6 +4,11 @@ import { useSelector } from 'react-redux'
 
 const Navbar = () => {
     const cartItem = useSelector(state => state.handleCart)
+
+    const userLogout = () => {
+        localStorage.removeItem("token");
+    }
+    
     return (
         <nav className="navbar navbar-expand-lg navbar-light bg-light py-6 sticky-top">
             <div className="Navbar-container" style={{display:"flex", width:"100%"}}>
@@ -16,12 +21,17 @@ const Navbar = () => {
                 <div className="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul className="navbar-nav m-auto my-2 text-center">
                         <li className="nav-item">
-                            <NavLink className="nav-link" to="/">Home </NavLink>
+                        {window.localStorage.getItem("token") !== null && 
+                            <NavLink className="nav-link" to="/home">Home </NavLink>
+                        }
                         </li>
                     </ul>
                     <div className="buttons text-center">
-                        <NavLink to="/login" className="btn btn-outline-dark m-2"><i className="fa fa-sign-in-alt mr-1"></i> Login</NavLink>
+                        { window.localStorage.getItem("token") !== null && <>
+                        <NavLink to="/login" className="btn btn-outline-dark m-2" onClick={userLogout}><i className="fa fa-sign-in-alt mr-1"></i> Logout</NavLink>
                         <NavLink to="/cart" className="btn btn-outline-dark m-2"><i className="fa fa-cart-shopping mr-1"></i> Cart ({cartItem.length}) </NavLink>
+                        </>                       
+                        }                      
                     </div>
                 </div>
             </div>

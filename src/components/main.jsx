@@ -1,5 +1,5 @@
 import React from "react";
-
+import image from '../../src/assets/backgroundImage.jpg'
 const Home = () => {
   return (
     <>
@@ -7,7 +7,7 @@ const Home = () => {
         <div className="card bg-dark text-white border-0 mx-3">
           <img
             className="card-img img-fluid"
-            src="./assets/main.png.jpg"
+            src={image}
             alt="Card"
           />
           <div className="card-img-overlay d-flex align-items-center">

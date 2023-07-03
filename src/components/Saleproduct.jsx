@@ -11,19 +11,46 @@ const Saleproduct = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    const token = window.localStorage.getItem("token");
     const getAllCategory = async () => {
       setLoading(true);
-      const response = await fetch("http://localhost:3001/category/getAll");
-        setCategories(await response.clone().json());
+      const response = await fetch("http://localhost:3001/category/getAll",{
+        method:'get',
+        headers: {
+          "x-access-token": token
+      }
+    });
+    if(!response.ok){
+      if(response.status === 401){
+        localStorage.removeItem("token");
+        navigate('/login');
+      }
+    }
+    else {
+      setCategories(await response.clone().json());
+    }
     };
     const getSalesItems = async () => {
-      const response = await fetch("http://localhost:3001/product/getAll");
-        setsalesData(await response.clone().json());
-        setLoading(false);
+      const response = await fetch("http://localhost:3001/product/getAll",{
+        method:'GET',
+        headers: {
+          "x-access-token": token
+      }
+    });
+    if(!response.ok){
+      if(response.status === 401){
+        localStorage.removeItem("token");
+        navigate('/login');
+      }
+    }
+    else {
+      setsalesData(await response.clone().json());
+    }
+    setLoading(false);
     };
     getAllCategory();
     getSalesItems();
-  }, []);
+  }, [navigate]);
   const Loading = () => {
     return (
       <>
@@ -52,8 +79,8 @@ const Saleproduct = () => {
     );
   };
 
-  const filterProduct = (categoryName) => {
-    navigate('/category/'+ categoryName);
+  const filterProduct = (categoryId) => {
+    navigate('/category/'+ categoryId, { state: { categoryId }});
   }
   const ShowSalesProducts = () => {
     return (
@@ -64,19 +91,11 @@ const Saleproduct = () => {
           </div>
         </div>
         <div className="buttons text-center py-5">
-        {/* add id also for categories bind here */}
-        {/* {categories.map((category) => {
+        {categories.map((category) => {
           return(
-          <button className="btn btn-outline-dark btn-sm m-2" onClick={() => filterProduct(category)}>{category}</button>
+          <button className="btn btn-outline-dark btn-sm m-2" onClick={() => filterProduct(category.id)}>{category.name}</button>
           )  
-        })} */}
-          <button className="btn btn-outline-dark btn-sm m-2" onClick={() => filterProduct}>All</button>
-          <button className="btn btn-outline-dark btn-sm m-2" onClick={() => filterProduct("mensclothing")}>Men's Clothing</button>
-          <button className="btn btn-outline-dark btn-sm m-2" onClick={() => filterProduct("womensclothing")}>
-            Women's Clothing
-          </button>
-          <button className="btn btn-outline-dark btn-sm m-2" onClick={() => filterProduct("jewelery")}>Jewelery</button>
-          <button className="btn btn-outline-dark btn-sm m-2" onClick={() => filterProduct("electronics")}>Electronics</button>
+        })}
         </div>  
         <div className="row">
           <div className="col-12">

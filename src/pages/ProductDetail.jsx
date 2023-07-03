@@ -1,31 +1,45 @@
 import React, { useEffect, useState } from "react";
 import Skeleton from "react-loading-skeleton";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useLocation  } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { addCart } from "../redux/action";
-
 import { Footer, Navbar } from "../components";
 
 const Product = () => {
-  const { id } = useParams();
   const [product, setProduct] = useState([]);
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { state } = useLocation();
 
   const addProduct = (product) => {
     dispatch(addCart(product));
   };
 
   useEffect(() => {
+    const token = window.localStorage.getItem("token");
     const getProduct = async () => {
       setLoading(true);
-      const response = await fetch(`https://fakestoreapi.com/products/${id}`);
+      const response = await fetch(`http://localhost:3001/product/getProduct/${state.productId}`,{
+        method:'get',
+        headers: {
+          "x-access-token": token
+      }
+    });
+    if(!response.ok){
+      if(response.status === 401){
+        localStorage.removeItem("token");
+        navigate('/login');
+      }
+    }
+    else {
       const data = await response.json();
       setProduct(data);
+    }
       setLoading(false);
     };
     getProduct();
-  }, [id]);
+  }, [state.productId, navigate]);
 
   //Used skeleton loader
   const Loading = () => {
@@ -55,11 +69,14 @@ const Product = () => {
     return (
       <>
         <div className="container my-5 py-2">
+          {product === null || product === "" ? <div>
+            <p>no data to display</p>
+          </div> :
           <div className="row">
             <div className="col-md-6 col-sm-12 py-3">
               <img
                 className="img-fluid"
-                src={product.image}
+                src={product.imageurl}
                 alt={product.title}
                 width="400px"
                 height="400px"
@@ -85,11 +102,11 @@ const Product = () => {
               </Link>
             </div>
           </div>
+          }
         </div>
       </>
     );
   };
-
   return (
     <>
       <Navbar />

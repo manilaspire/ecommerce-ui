@@ -1,4 +1,4 @@
- import { Navbar, Main, Product, Footer, Saleproduct } from "../components";//
+import { Navbar, Main, Footer, Saleproduct } from "../components";
 
 function Home() {
   return (
