@@ -14,14 +14,8 @@ const Categoryproducts = () => {
   useEffect(() => {
     const token = window.localStorage.getItem("token");
     const getCategoryProducts = async () => {
-      setLoading(true);
-    //   const response = await fetch(`http://localhost:3001/category/getCategory/${state.categoryId}`,{
-    //     method:'GET',
-    //     headers: {
-    //       "x-access-token": token
-    //   }
-    // });
-    const response = await fetch(`http://localhost:3001/product/getAll`,{
+      setLoading(true);  
+    const response = await fetch(`http://localhost:3001/product/getProductByCategory/${state.categoryId}`,{
         method:'GET',
         headers: {
           "x-access-token": token
