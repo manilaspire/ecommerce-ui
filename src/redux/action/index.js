@@ -13,3 +13,19 @@ export const delCart = (product) =>{
         payload:product
     }
 }
+
+// For Add token
+export const saveToken = (token) =>{
+    return {
+        type:"SAVETOKEN",
+        payload:token
+    }
+}
+
+// For Add token
+export const removeToken = (token) =>{
+    return {
+        type:"REMOVETOKEN",
+        payload:token
+    }
+}

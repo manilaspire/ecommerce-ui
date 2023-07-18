@@ -1,17 +1,22 @@
 import React, {useState} from "react";
 import { Link } from "react-router-dom";
-import { Navbar } from "../components";
 import { useNavigate } from 'react-router-dom';
+import{saveToken} from "../redux/action"
+import { useDispatch } from "react-redux";
 
 const Login = () => {
 
   const [loginError, setloginError] = useState()
+  const dispatch = useDispatch();
   const navigate = useNavigate();
+  const saveAccessToken = (token) => {
+    dispatch(saveToken(token));
+  };
   const userLogin = async (event) => {
     //Prevent page reload
     event.preventDefault();
     setloginError("");  
-    var response = await fetch('http://localhost:3001/user/signIn',{
+    const response = await fetch('http://localhost:3001/user/signIn',{
       method: "post",
       headers: {
         'Content-type': 'application/json'
@@ -23,7 +28,7 @@ const Login = () => {
     });
     if(!response.ok){
       if(response.status === 404 || response.status === 401){
-        var responseMessage = await response.clone().json();
+        const responseMessage = await response.clone().json();
         setloginError(responseMessage.message);
       }
       else{
@@ -31,15 +36,15 @@ const Login = () => {
       }
     }
     else {
-      var token = await response.clone().json();
+      const token = await response.clone().json();
       window.localStorage.setItem("token", token.accessToken);
+      saveAccessToken(token.accessToken);
       navigate('/home');
     }
   }
 
   return (
     <>
-      <Navbar />
       <div className="container my-3 py-3">
         <h1 className="text-center">Login</h1>
         <hr />

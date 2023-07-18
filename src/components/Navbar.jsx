@@ -1,12 +1,19 @@
 import React from 'react'
 import { NavLink } from 'react-router-dom'
 import { useSelector } from 'react-redux'
+import{ removeToken } from "../redux/action"
+import { useDispatch } from "react-redux";
 
 const Navbar = () => {
     const cartItem = useSelector(state => state.handleCart)
-
+    const token = useSelector(state => state.handleToken)
+    const dispatch = useDispatch();
+    const removeAccessToken = (token) => {
+        dispatch(removeToken(token));
+      };
     const userLogout = () => {
         localStorage.removeItem("token");
+        removeAccessToken(window.localStorage.getItem("token"))
     }
     
     return (
@@ -21,13 +28,13 @@ const Navbar = () => {
                 <div className="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul className="navbar-nav m-auto my-2 text-center">
                         <li className="nav-item">
-                        {window.localStorage.getItem("token") !== null && 
+                        {(token.accessToken !== undefined && token.accessToken !== null)&& 
                             <NavLink className="nav-link" to="/home">Home </NavLink>
                         }
                         </li>
                     </ul>
                     <div className="buttons text-center">
-                        { window.localStorage.getItem("token") !== null && <>
+                        {(token.accessToken !== undefined && token.accessToken !== null)&& <>
                         <NavLink to="/login" className="btn btn-outline-dark m-2" onClick={userLogout}><i className="fa fa-sign-in-alt mr-1"></i> Logout</NavLink>
                         <NavLink to="/cart" className="btn btn-outline-dark m-2"><i className="fa fa-cart-shopping mr-1"></i> Cart ({cartItem.length}) </NavLink>
                         </>                       

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
-import { Navbar, Footer, Products } from "../components";
+import {  Footer, Products } from "../components";
 import { useNavigate, useLocation } from 'react-router-dom';
 
 const Categoryproducts = () => {
@@ -65,7 +65,6 @@ const Categoryproducts = () => {
 
   return (
     <>
-    <Navbar />
       <div className="Products-container my-3 py-3">
         <div className="row justify-content-center">
         {loading ? <Loading /> : <Products data={data}/>}

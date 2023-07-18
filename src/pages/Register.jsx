@@ -1,5 +1,5 @@
 import React, {useState} from 'react'
-import { Footer, Navbar } from "../components";
+import { Footer } from "../components";
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 
@@ -12,7 +12,7 @@ const Register = () => {
         //Prevent page reload
         event.preventDefault();
         setregisterError("");
-        var response = await fetch('http://localhost:3001/user/createUser',{
+        const response = await fetch('http://localhost:3001/user/createUser',{
             method: "post",
             headers: {
               'Content-type': 'application/json'
@@ -29,7 +29,7 @@ const Register = () => {
         });   
         if(!response.ok){
           if(response.status === 404 || response.status === 401){
-            var responseInvalid = await response.clone().json();
+            const responseInvalid = await response.clone().json();
             setregisterError(responseInvalid.message);
           }
           else{
@@ -37,14 +37,13 @@ const Register = () => {
           }
         }
         else {
-            var responseMessage = await response.clone().json();
+            const responseMessage = await response.clone().json();
             alert(responseMessage.message)
             navigate('/login');
         }
       }
     return (
         <>
-            <Navbar />
             <div className="container my-3 py-3">
                 <h1 className="text-center">Register</h1>
                 <hr />
